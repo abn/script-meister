@@ -6,7 +6,7 @@ if [ "$(whoami)" != "root" ]; then
 fi
 
 # Install dependnecies
-yum --quiet -y install python python-cheetah
+yum -y install python python-cheetah
 
 # Begin sickbeard setup
 SB_GIT="git://github.com/midgetspy/Sick-Beard.git"
@@ -24,7 +24,7 @@ SB_SERVICE_HOST=localhost
 SB_SERVICE_PROT=http
 
 ## Set up user and group as required
-if [ "$DEFAULT_USER" == "$SB_HOME" ]; then
+if [ "$DEFAULT_USER" == "$SB_USER" ]; then
 	useradd --system --user-group --home "$SB_HOME" $SB_USER
 else
 	if [ -z "(grep \"^$SB_USER:\" /etc/passwd)" ]; then
@@ -36,8 +36,8 @@ else
 fi
 
 # Fetch the code
-#git clone $SB_GIT "$SB_HOME"
-chmod 770 "$SB_HOME"
+git clone $SB_GIT "$SB_HOME"
+chmod 700 "$SB_HOME"
 chown -R $SB_USER:$SB_USER "$SB_HOME"
 
 cat > /usr/bin/sickbeard << EOF
@@ -71,7 +71,7 @@ nicecmd=
 #  example: nicecmd="nice -n 19 ionice -c3"
 EOF
 
-chmod 744 $SB_SERVICE_CFG
+chmod 644 $SB_SERVICE_CFG
 
 ## init.d script
 cp $SB_INIT_SRC $SB_INIT_DST
